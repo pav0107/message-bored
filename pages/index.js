@@ -32,7 +32,7 @@ export default function Home() {
       <div className="my-12 text-lg font-medium">
         <h2>See what other bored people are prattling on about</h2>
         {allPosts.map((post) => (
-          <Message {...post} />
+          <Message key={post.id} {...post} />
         ))}
       </div>
     </div>
