@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import Message from '../components/Message';
+import { BsTrash2Fill } from 'react-icons/bs';
+import { AiFillEdit } from 'react-icons/ai';
 
 export default function Dashboard() {
   const route = useRouter();
@@ -32,11 +34,28 @@ export default function Dashboard() {
     <div>
       <h1>Your posts</h1>
       <div>
-        {posts.map((post) => (
-          <Message {...post} key={post.id} />
-        ))}
+        {posts.map((post) => {
+          return (
+            <Message {...post} key={post.id}>
+              <div className="flex gap-4">
+                <button className="flex items-center justify-center gap-2 py-2 text-sm text-pink-600">
+                  <BsTrash2Fill className="text-2xl" /> Delete
+                </button>
+                <button className="flex items-center justify-center gap-2 py-2 text-sm text-teal-600">
+                  <AiFillEdit className="text-2xl" />
+                  Edit
+                </button>
+              </div>
+            </Message>
+          );
+        })}
       </div>
-      <button onClick={() => auth.signOut()}>Sign out</button>
+      <button
+        className="px-4 py-2 my-6 font-medium text-white bg-gray-800 rounded-md"
+        onClick={() => auth.signOut()}
+      >
+        Sign out
+      </button>
     </div>
   );
 }
