@@ -2,11 +2,19 @@ import { auth } from '../utils/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  where,
+  deleteDoc,
+} from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import Message from '../components/Message';
 import { BsTrash2Fill } from 'react-icons/bs';
 import { AiFillEdit } from 'react-icons/ai';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const route = useRouter();
@@ -25,6 +33,12 @@ export default function Dashboard() {
     return unsubscribe;
   };
 
+  // Delete Post
+  const deletePost = async (id) => {
+    const docRef = doc(db, 'posts', id);
+    await deleteDoc(docRef);
+  };
+
   // Get users data
   useEffect(() => {
     getData();
@@ -38,13 +52,18 @@ export default function Dashboard() {
           return (
             <Message {...post} key={post.id}>
               <div className="flex gap-4">
-                <button className="flex items-center justify-center gap-2 py-2 text-sm text-pink-600">
+                <button
+                  onClick={() => deletePost(post.id)}
+                  className="flex items-center justify-center gap-2 py-2 text-sm text-pink-600"
+                >
                   <BsTrash2Fill className="text-2xl" /> Delete
                 </button>
-                <button className="flex items-center justify-center gap-2 py-2 text-sm text-teal-600">
-                  <AiFillEdit className="text-2xl" />
-                  Edit
-                </button>
+                <Link href={{ pathname: '/post', query: post }}>
+                  <button className="flex items-center justify-center gap-2 py-2 text-sm text-teal-600">
+                    <AiFillEdit className="text-2xl" />
+                    Edit
+                  </button>
+                </Link>
               </div>
             </Message>
           );
